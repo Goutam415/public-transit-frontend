@@ -1,0 +1,62 @@
+<div class="row">
+  <div class="col-12">
+    <div class="row">
+      <form [formGroup]="routesForm" novalidate>
+        <div class="col-3" *ngIf="routesForm.get('_id').value">
+          <mat-form-field appearance="fill">
+            <mat-label>Route ID</mat-label>
+            <input matInput formControlName="routeId" [disabled]="true">
+          </mat-form-field>
+        </div>
+        <div class="col-3">
+          <mat-form-field appearance="fill">
+            <mat-label>Route Name</mat-label>
+            <input matInput formControlName="name">
+          </mat-form-field>
+        </div>
+        <div class="col-3">
+          <mat-form-field appearance="fill">
+            <mat-label>Direction</mat-label>
+            <mat-select formControlName="direction">
+              <mat-option>Clear</mat-option>
+              <mat-option value="UP">Up</mat-option>
+              <mat-option value="DOWN">Down</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-3">
+          <mat-form-field appearance="fill">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option>Clear</mat-option>
+              <mat-option value="Active">Active</mat-option>
+              <mat-option value="Inactive">Inactive</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-12" formArrayName="stops"
+          *ngFor="let stop of routesForm.get('stops')['controls']; let i = index;">
+          <div class="row" [formGroupName]="i">
+            <div class="col-3">
+              <mat-form-field appearance="fill">
+                <mat-label>{{'Stop ' + i + ' Name'}}</mat-label>
+                <input matInput formControlName="name">
+              </mat-form-field>
+            </div>
+            <div class="col-3">
+              <a (click)="removeStop(i)">Remove Stop</a>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div>
+      <button [disabled]="!routesForm.valid" mat-raised-button color="primary" (click)="saveRoute()">Save</button>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="row">
+      <div class="col-12" id="map"></div>
+    </div>
+  </div>
+</div>
