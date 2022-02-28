@@ -6,7 +6,8 @@
 
   <div class="row">
     <div class="col-6">
-      <div class="card card-space outer-border" (click)="addMarker(route.stops)" *ngFor="let route of routesList;">
+      <div class="card card-space outer-border" (click)="addMarker(route.stops, route.direction)"
+        *ngFor="let route of routesList;">
         <div class="row">
           <div class="col-3">
             <h4>Route ID</h4>

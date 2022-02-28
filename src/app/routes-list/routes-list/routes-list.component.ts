@@ -43,7 +43,7 @@ export class RoutesListComponent implements OnInit {
       if (this.routesList.length) {
         this.loadMap();
         setTimeout(() => {
-          this.addMarker(this.routesList[0].stops);
+          this.addMarker(this.routesList[0].stops, this.routesList[0].direction);
         }, 2000);
       }
     }, err => {
@@ -71,14 +71,15 @@ export class RoutesListComponent implements OnInit {
     });
   }
 
-  private drawPolyline(locations: [RouteStop]) {
+  private drawPolyline(locations: [RouteStop], direction) {
     this.polylinePath.setMap(null);
     this.polylinePath.setPath(locations);
+    this.setPolylineColor(direction);
     this.polylinePath.setMap(this.map);
   }
 
   // Adds a marker to the map.
-  addMarker(locations: [RouteStop]) {
+  addMarker(locations: [RouteStop], direction: string) {
     if (this.markers.length){
       this.markers.forEach(marker => {
         marker.setMap(null);
@@ -106,7 +107,7 @@ export class RoutesListComponent implements OnInit {
       this.map.fitBounds(this.bounds);
     });
     
-    this.drawPolyline(locations);
+    this.drawPolyline(locations, direction);
   }
 
   private setMarkerInfoWindow(marker, location) {
@@ -117,6 +118,12 @@ export class RoutesListComponent implements OnInit {
           content: content
       });
       infoWindow.open(this.map, marker);
+    });
+  }
+
+  setPolylineColor(direction) {
+    this.polylinePath.setOptions({
+      strokeColor: direction === 'UP' ? 'blue' : 'red'
     });
   }
 }
