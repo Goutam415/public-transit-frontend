@@ -2,10 +2,10 @@
   <div class="col-12">
     <div class="row">
       <form [formGroup]="routesForm" novalidate>
-        <div class="col-3" *ngIf="routesForm.get('_id').value">
+        <div class="col-3">
           <mat-form-field appearance="fill">
             <mat-label>Route ID</mat-label>
-            <input matInput formControlName="routeId" [disabled]="true">
+            <input matInput formControlName="routeId" [readonly]="true">
           </mat-form-field>
         </div>
         <div class="col-3">

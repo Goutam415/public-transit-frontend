@@ -1,0 +1,1 @@
+export const HTTP_CONSTANT = 'http://localhost:3000/';

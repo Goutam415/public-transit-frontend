@@ -1,6 +1,11 @@
 import { AfterViewInit } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RouteItem, RouteStop } from 'src/app/shared/constants/interface-constants';
+import { ToastNotificationService } from 'src/app/shared/notification/notification.service';
+import { RouteService } from 'src/app/shared/services/routes/route.service';
+import { RouterHelper } from 'src/app/shared/utils/helpers/router-helper';
 
 declare var google: any;
 @Component({
@@ -28,11 +33,24 @@ export class RoutesComponent implements OnInit {
 
   map: any;
 
-  constructor() { }
+  id: number;
+
+  routeItem: RouteItem;
+
+  constructor(
+    private routeService: RouteService,
+    private route: ActivatedRoute, 
+    private router: Router,
+    private toast: ToastNotificationService,
+  ) { }
 
   ngOnInit(): void {
-    this.createForm();
-    this.loadMap();
+    this.route.parent.params.subscribe(params => {
+      this.id = params.id || null;
+      this.createForm();
+      this.loadMap();
+      this.getDetails();
+    });
   }
 
   private createForm() {
@@ -40,17 +58,18 @@ export class RoutesComponent implements OnInit {
       _id: new FormControl(null),
       name: new FormControl('', [Validators.required]),
       direction: new FormControl('UP', [Validators.required]),
-      routeId: new FormControl({ value: '', disabled: true },),
+      routeId: new FormControl({ value: '', disabled: true }),
       status: new FormControl('Active', [Validators.required]),
       stops: new FormArray([], [Validators.required, Validators.minLength(1)])
     });
   }
 
-  private createStop(stopDetails: { lat?: number, lng?: number }): FormGroup {
+  private createStop(stopDetails: RouteStop): FormGroup {
     return new FormGroup({
-      _id: new FormControl(null),
-      stopId: new FormControl(''),
+      _id: new FormControl(stopDetails._id || null),
+      stopId: new FormControl(stopDetails.stopId || null),
       name: new FormControl(
+        stopDetails.name ||
         this.routesForm.get('stops').value.length,
         [Validators.required]
       ),
@@ -85,15 +104,31 @@ export class RoutesComponent implements OnInit {
     });
   }
 
+  getDetails() {
+    if (this.id) {
+      this.routeService.getRouteById(this.id)
+      .subscribe(response => {
+        this.routeItem = response.payload;
+        this.routesForm.patchValue(this.routeItem);
+        this.routeItem.stops.forEach(stop => {
+          this.addMarker(stop);
+        });
+      }, err => {
+        console.log('Error getting route by id : ', err);
+      })
+    }
+  }
+
   // Adds a marker to the map.
-  private addMarker(location: { lat: number, lng: number }) {
+  private addMarker(location: RouteStop) {
     (this.routesForm.get('stops') as FormArray)
     .push(this.createStop(location));
 
+    const position = { lat: location.lat, lng: location.lng }
     // Add the marker at the clicked location, and add the next-available label
     // from the array of alphabetical characters.
     const marker = new google.maps.Marker({
-      position: location,
+      position,
       label: String(this.labelIndex++),
       draggable: true,
       animation: google.maps.Animation.DROP,
@@ -104,7 +139,7 @@ export class RoutesComponent implements OnInit {
     this.markers.push(marker);
     const newStopAddedAt = this.routesForm.get('stops').value.length - 1;
 
-    this.setMarkerInfoWindow(marker, location, newStopAddedAt);
+    this.setMarkerInfoWindow(marker, position, newStopAddedAt);
     marker.addListener('dragend', (event) => {
       const stopFormGroup = (this.routesForm.get('stops') as FormArray).at(newStopAddedAt)
       stopFormGroup.patchValue({ lat: event.latLng.lat(), lng: event.latLng.lng() });
@@ -159,6 +194,24 @@ export class RoutesComponent implements OnInit {
   }
 
   saveRoute() {
-    
+    if (!this.id) {
+      this.routeService.saveRoute(this.routesForm.value)
+      .subscribe(response => {
+        this.toast.showSuccess(response.message, 'Success');
+        this.router.navigateByUrl(`/routes/${response.payload._id}`)
+      }, err => {
+        this.toast.showError(err.message, 'Error');
+        console.log('Cannot save route : ', err);
+      });
+    } else {
+      this.routeService.updateRoute(this.id, this.routesForm.value)
+      .subscribe(response => {
+        this.toast.showSuccess(response.message, 'Success');
+        RouterHelper.reloadPage(this.router, this.route);
+      }, err => {
+        this.toast.showError(err.message, 'Error');
+        console.log('update failed : ', err);
+      });
+    }
   }
 }
