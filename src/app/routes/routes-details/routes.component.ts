@@ -175,6 +175,7 @@ export class RoutesComponent implements OnInit {
 
     this.polylinePath.setMap(null);
     this.polylinePath.setPath(locations);
+    this.setPolylineColor()
     this.polylinePath.setMap(this.map);
   }
 
@@ -240,5 +241,12 @@ export class RoutesComponent implements OnInit {
 
   private navigateToRouteList() {
     this.router.navigate(['../../routes-list'], { relativeTo: this.route });
+  }
+
+  setPolylineColor() {
+    debugger;
+    this.polylinePath.setOptions({
+      strokeColor: this.routesForm.get('direction').value === 'UP' ? 'blue' : 'red'
+    });
   }
 }

@@ -20,7 +20,7 @@ export interface RouteStop {
     _id?: string;
 }
 
-export interface ListResponse {
+export interface ItemListResponse {
     message: string;
-    payload: any[];
+    payload: RouteItem[];
 }

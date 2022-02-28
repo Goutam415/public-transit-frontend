@@ -17,8 +17,7 @@
         <div class="col-3">
           <mat-form-field appearance="fill">
             <mat-label>Direction</mat-label>
-            <mat-select formControlName="direction">
-              <mat-option>Clear</mat-option>
+            <mat-select formControlName="direction" (selectionChange)="setPolylineColor()">
               <mat-option value="UP">Up</mat-option>
               <mat-option value="DOWN">Down</mat-option>
             </mat-select>
@@ -28,7 +27,6 @@
           <mat-form-field appearance="fill">
             <mat-label>Status</mat-label>
             <mat-select formControlName="status">
-              <mat-option>Clear</mat-option>
               <mat-option value="Active">Active</mat-option>
               <mat-option value="Inactive">Inactive</mat-option>
             </mat-select>
