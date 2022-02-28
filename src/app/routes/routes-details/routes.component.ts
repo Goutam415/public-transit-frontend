@@ -58,7 +58,7 @@ export class RoutesComponent implements OnInit {
       _id: new FormControl(null),
       name: new FormControl('', [Validators.required]),
       direction: new FormControl('UP', [Validators.required]),
-      routeId: new FormControl({ value: '', disabled: true }),
+      routeId: new FormControl({ value: null, disabled: true }),
       status: new FormControl('Active', [Validators.required]),
       stops: new FormArray([], [Validators.required, Validators.minLength(1)])
     });
@@ -156,7 +156,8 @@ export class RoutesComponent implements OnInit {
 
   private setMarkerInfoWindow(marker, location, newStopAddedAt) {
     marker.addListener('click', (event) => {
-      var content = 'Stop Name: ' + (this.routesForm.get('stops') as FormArray).at(newStopAddedAt).value.name + '<br />Latitude: ' + location.lat + '<br />Longitude: ' + location.lng;
+      const stopForm = (this.routesForm.get('stops') as FormArray).at(newStopAddedAt).value;
+      var content = 'Stop Name: ' + stopForm.name + '<br />Stop Id: ' + stopForm.stopId + '<br />Latitude: ' + location.lat + '<br />Longitude: ' + location.lng;
       content += "<br /><input type = 'button' value = 'Delete' onclick = 'removeStop(" + newStopAddedAt + ");' value = 'Delete' />";
       var infoWindow = new google.maps.InfoWindow({
           content: content

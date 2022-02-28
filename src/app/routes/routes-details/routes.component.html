@@ -39,11 +39,17 @@
           <div class="row" [formGroupName]="i">
             <div class="col-3">
               <mat-form-field appearance="fill">
+                <mat-label>{{'Stop ID'}}</mat-label>
+                <input matInput formControlName="stopId" [readonly]="true">
+              </mat-form-field>
+            </div>
+            <div class="col-3">
+              <mat-form-field appearance="fill">
                 <mat-label>{{'Stop ' + i + ' Name'}}</mat-label>
                 <input matInput formControlName="name">
               </mat-form-field>
             </div>
-            <div class="col-3">
+            <div class="col-2">
               <a (click)="removeStop(i)">Remove Stop</a>
             </div>
           </div>
