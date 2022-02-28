@@ -32,4 +32,8 @@ export class RouteService {
   getAllRoutes() {
     return this.http.get<ItemListResponse>(`${this.httpConstant}${this.endpoint}`);
   }
+
+  deleteSelectedRoutes(routeIds: any[]) {
+    return this.http.post<ItemResponse>(`${this.httpConstant}${this.endpoint}/delete`, routeIds);
+  }
 }

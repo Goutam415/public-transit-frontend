@@ -11,16 +11,17 @@ declare var google: any;
 })
 export class RoutesListComponent implements OnInit {
 
-  constructor(private routeService: RouteService, private toast: ToastNotificationService) { }
-
+  
   routesList: RouteItem[];
-
+  
   map: any;
-
+  
   markers = [];
-
+  
+  selectedRouteIds = [];
+  
   readonly bounds = new google.maps.LatLngBounds();
-
+  
   readonly polylinePath = new google.maps.Polyline({
     path: [],
     geodesic: false,
@@ -28,6 +29,9 @@ export class RoutesListComponent implements OnInit {
     strokeOpacity: 1.0,
     strokeWeight: 2,
   });
+
+  constructor(private routeService: RouteService, private toast: ToastNotificationService) { }
+
   ngOnInit(): void {
     this.getRoutesList();
   }
@@ -51,6 +55,24 @@ export class RoutesListComponent implements OnInit {
     })
   }
 
+  updateRoute(locations?: [RouteStop], direction?: string) {
+    this.resetMap();
+    this.addMarker(locations, direction)
+  }
+
+  resetMap() {
+    // Remove all markers to update the routes
+    if (this.markers.length){
+      this.markers.forEach(marker => {
+        marker.setMap(null);
+      });
+  
+      this.markers = [];
+    }
+
+    this.polylinePath.setMap(null);
+  }
+
   private loadMap() {
     navigator.geolocation.getCurrentPosition(currentPosition => {
       const currentLocation = { 
@@ -72,7 +94,7 @@ export class RoutesListComponent implements OnInit {
   }
 
   private drawPolyline(locations: [RouteStop], direction) {
-    this.polylinePath.setMap(null);
+    // this.polylinePath.setMap(null);
     this.polylinePath.setPath(locations);
     this.setPolylineColor(direction);
     this.polylinePath.setMap(this.map);
@@ -80,13 +102,6 @@ export class RoutesListComponent implements OnInit {
 
   // Adds a marker to the map.
   addMarker(locations: [RouteStop], direction: string) {
-    if (this.markers.length){
-      this.markers.forEach(marker => {
-        marker.setMap(null);
-      });
-  
-      this.markers = [];
-    }
     locations.forEach(location => {
       // Add the marker at the clicked location, and add the next-available label
       // from the array of alphabetical characters.
@@ -105,9 +120,9 @@ export class RoutesListComponent implements OnInit {
       // Fit the marker into the map view.
       this.bounds.extend(marker.getPosition());
       this.map.fitBounds(this.bounds);
+      this.drawPolyline(locations, direction);
     });
     
-    this.drawPolyline(locations, direction);
   }
 
   private setMarkerInfoWindow(marker, location) {
@@ -124,6 +139,25 @@ export class RoutesListComponent implements OnInit {
   setPolylineColor(direction) {
     this.polylinePath.setOptions({
       strokeColor: direction === 'UP' ? 'blue' : 'red'
+    });
+  }
+
+  onRouteSelected(route) {
+    const idIndex = this.selectedRouteIds.indexOf(route._id);
+    if (idIndex < 0) {
+      this.selectedRouteIds.push(route._id);
+    } else {
+      this.selectedRouteIds.splice(idIndex, 1);
+    }
+  }
+
+  deleteSelectedRoutes() {
+    this.routeService.deleteSelectedRoutes(this.selectedRouteIds)
+    .subscribe(response => {
+      this.toast.showSuccess(response.message, 'Success');
+      this.getRoutesList();
+    }, err => {
+      this.toast.showError(err.error.message, 'Error');
     });
   }
 }
