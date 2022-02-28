@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { HTTP_CONSTANT } from '../../constants/http-constant';
-import { ItemResponse, RouteItem } from '../../constants/interface-constants';
+import { ItemListResponse, ItemResponse, RouteItem } from '../../constants/interface-constants';
 
 @Injectable({
   providedIn: 'root'
@@ -27,5 +27,9 @@ export class RouteService {
 
   deleteRoute(routeId) {
     return this.http.delete<ItemResponse>(`${this.httpConstant}${this.endpoint}/${routeId}`);
+  }
+
+  getAllRoutes() {
+    return this.http.get<ItemListResponse>(`${this.httpConstant}${this.endpoint}`);
   }
 }

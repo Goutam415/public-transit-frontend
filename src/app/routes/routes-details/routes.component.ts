@@ -244,7 +244,6 @@ export class RoutesComponent implements OnInit {
   }
 
   setPolylineColor() {
-    debugger;
     this.polylinePath.setOptions({
       strokeColor: this.routesForm.get('direction').value === 'UP' ? 'blue' : 'red'
     });

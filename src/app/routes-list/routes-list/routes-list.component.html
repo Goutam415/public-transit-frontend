@@ -1,6 +1,56 @@
-<p>routes-list works!</p>
-<div>
-  cadmhcgasdmvcjasdbmcmansd ,cmansdb cmvhjca,jsdn c,amsdn cAsdcasdgvcjahgdc
-  adsncmavshd caj,sdc
-  asdcaghsdvchagsdvc
+<div class="row">
+  <div class="col-12 text-right">
+    <a mat-raised-button color="primary" routerLink="/routes">Create Route</a>
+  </div>
+
+
+  <div class="row">
+    <div class="col-6">
+      <div class="card card-space outer-border" (click)="addMarker(route.stops)" *ngFor="let route of routesList;">
+        <div class="row">
+          <div class="col-3">
+            <h4>Route ID</h4>
+          </div>
+          <div class="col-3">
+            <h4>Name</h4>
+          </div>
+          <div class="col-3">
+            <h4>Direction </h4>
+          </div>
+          <div class="col-3">
+            <h4>Status</h4>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3">
+            <p>{{ route.routeId }}</p>
+          </div>
+          <div class="col-3">
+            <p>{{ route.name }} </p>
+          </div>
+          <div class="col-3">
+            <p>{{ route.direction }} </p>
+          </div>
+          <div class="col-3">
+            <p>{{ route.status }} </p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6" *ngFor="let stop of route.stops; let i = index">
+            <!-- <ng-container *ngFor="let stop of route.stops"> -->
+            <p> {{ i + 1 }} : {{ 'Stop Id: ' + stop.stopId + ', ' + 'Stop Name: ' + stop.name }} </p>
+            <!-- </ng-container> -->
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 text-right">
+            <a (click)="deactivateRoute(route._id)">Deactivate</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div id="map"></div>
+    </div>
+  </div>
 </div>
