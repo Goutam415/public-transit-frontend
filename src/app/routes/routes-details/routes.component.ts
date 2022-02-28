@@ -195,9 +195,15 @@ export class RoutesComponent implements OnInit {
 
     this.labelIndex = 0;
 
+    let isSavedStopExist = false;
     allLocations.forEach(stop => {
+      isSavedStopExist = stop._id !== null;
       this.addMarker(stop);
     });
+
+    if (isSavedStopExist) {
+      this.toast.showInfo('Changes will be saved only after clicking on save', 'Info');
+    }
   }
 
   saveRoute() {

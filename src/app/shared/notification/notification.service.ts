@@ -1,7 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { TOAST_DEFAULT_TIMEOUT } from '../constants/shared.constants';
 
 import { Helpers } from '../utils/helpers/helpers';
 
@@ -12,7 +11,7 @@ export class ToastNotificationService {
     showSuccess(message, title = '', options = {}) {
         options = {
             ...options,
-            timeOut: TOAST_DEFAULT_TIMEOUT,
+            timeOut: 2000,
             positionClass: 'toast-top-right',
         };
         this.toastr.success(message, title, options);
@@ -21,7 +20,7 @@ export class ToastNotificationService {
     showError(message, title = '', options = {}) {
         options = {
             ...options,
-            timeOut: TOAST_DEFAULT_TIMEOUT,
+            timeOut: 2000,
             positionClass: 'toast-top-right',
         };
         let errMessage = 'Unknown error received - unable to fetch message';
@@ -34,4 +33,13 @@ export class ToastNotificationService {
         }
         this.toastr.error(errMessage, title, options);
     }
+
+    showInfo(message, title = '', options = {}) {
+        options = {
+            ...options,
+            positionClass: 'toast-top-right',
+        };
+        this.toastr.info(message, title, options);
+    }
+
 }
