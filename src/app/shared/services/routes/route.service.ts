@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { HTTP_CONSTANT } from '../../constants/http-constant';
-import { ItemResponse } from '../../constants/interface-constants';
+import { ItemResponse, RouteItem } from '../../constants/interface-constants';
 
 @Injectable({
   providedIn: 'root'
@@ -13,15 +13,19 @@ export class RouteService {
 
   constructor(private http: HttpClient) {}
 
-  saveRoute(routeDetails) {
+  saveRoute(routeDetails: RouteItem) {
     return this.http.post<ItemResponse>(`${this.httpConstant}${this.endpoint}`, routeDetails);
   }
 
-  getRouteById(routeId) {
+  getRouteById(routeId: string) {
     return this.http.get<ItemResponse>(`${this.httpConstant}${this.endpoint}/${routeId}`)
   }
 
-  updateRoute(routeId, routeDetails) {
+  updateRoute(routeId: string, routeDetails: RouteItem) {
     return this.http.patch<ItemResponse>(`${this.httpConstant}${this.endpoint}/${routeId}`, routeDetails);
+  }
+
+  deleteRoute(routeId) {
+    return this.http.delete<ItemResponse>(`${this.httpConstant}${this.endpoint}/${routeId}`);
   }
 }

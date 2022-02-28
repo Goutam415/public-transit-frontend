@@ -33,7 +33,7 @@ export class RoutesComponent implements OnInit {
 
   map: any;
 
-  id: number;
+  id: string;
 
   routeItem: RouteItem;
 
@@ -119,7 +119,8 @@ export class RoutesComponent implements OnInit {
           });
         }, 3000);
       }, err => {
-        this.toast.showError(err.message, 'Error');
+        this.toast.showError(err.error.message, 'Error');
+        this.navigateToRouteList()
       });
     }
   }
@@ -219,5 +220,19 @@ export class RoutesComponent implements OnInit {
         this.toast.showError(err.message, 'Error');
       });
     }
+  }
+
+  deleteRoute() {
+    this.routeService.deleteRoute(this.id)
+      .subscribe(response => {
+        this.toast.showSuccess(response.message, 'Success');
+        this.navigateToRouteList()
+      }, err => {
+        this.toast.showError(err.message, 'Error');
+      });
+  }
+
+  private navigateToRouteList() {
+    this.router.navigate(['../../routes-list'], { relativeTo: this.route });
   }
 }

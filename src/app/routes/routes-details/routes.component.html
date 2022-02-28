@@ -57,7 +57,8 @@
       </form>
     </div>
     <div>
-      <button [disabled]="!routesForm.valid" mat-raised-button color="primary" (click)="saveRoute()">Save</button>
+      <button [disabled]="!routesForm.valid" mat-raised-button color="primary" (click)="saveRoute()">Save Route</button>
+      <button *ngIf="id" mat-raised-button color="danger" (click)="deleteRoute()">Delete Route</button>
     </div>
   </div>
   <div class="col-12">
