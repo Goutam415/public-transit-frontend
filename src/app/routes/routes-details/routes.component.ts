@@ -110,9 +110,14 @@ export class RoutesComponent implements OnInit {
       .subscribe(response => {
         this.routeItem = response.payload;
         this.routesForm.patchValue(this.routeItem);
-        this.routeItem.stops.forEach(stop => {
-          this.addMarker(stop);
-        });
+        // Using this hack as to avoid the maps loading delay
+        // Which causes this function to run before the map loads
+        // And hence showing marker on map fails.
+        setTimeout(() => {
+          this.routeItem.stops.forEach(stop => {
+            this.addMarker(stop);
+          });
+        }, 3000);
       }, err => {
         console.log('Error getting route by id : ', err);
       })
