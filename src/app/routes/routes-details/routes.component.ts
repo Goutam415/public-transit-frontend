@@ -119,8 +119,8 @@ export class RoutesComponent implements OnInit {
           });
         }, 3000);
       }, err => {
-        console.log('Error getting route by id : ', err);
-      })
+        this.toast.showError(err.message, 'Error');
+      });
     }
   }
 
@@ -206,16 +206,16 @@ export class RoutesComponent implements OnInit {
         this.router.navigateByUrl(`/routes/${response.payload._id}`)
       }, err => {
         this.toast.showError(err.message, 'Error');
-        console.log('Cannot save route : ', err);
       });
     } else {
       this.routeService.updateRoute(this.id, this.routesForm.value)
       .subscribe(response => {
         this.toast.showSuccess(response.message, 'Success');
-        RouterHelper.reloadPage(this.router, this.route);
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       }, err => {
         this.toast.showError(err.message, 'Error');
-        console.log('update failed : ', err);
       });
     }
   }
