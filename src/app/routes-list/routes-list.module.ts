@@ -5,19 +5,17 @@ import { RoutesListRoutingModule } from './routes-list-routing.module';
 import { ToastNotificationService } from '../shared/notification/notification.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
-
-
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
-  declarations: [
-    RoutesListComponent
-  ],
+  declarations: [RoutesListComponent],
   imports: [
     CommonModule,
     RoutesListRoutingModule,
     MatCheckboxModule,
-    MatButtonModule
+    MatButtonModule,
+    MatCardModule,
   ],
-  providers: [ToastNotificationService]
+  providers: [ToastNotificationService],
 })
-export class RoutesListModule { }
+export class RoutesListModule {}

@@ -2,12 +2,9 @@
   <div class="col-12 text-right">
     <div class="row">
       <div class="col-10"></div>
-      <div class="col-1">
+      <div class="col-2">
         <button *ngIf="selectedRouteIds.length" mat-raised-button (click)="deleteSelectedRoutes()" color="warn">Delete
           Routes</button>
-      </div>
-      <div class="col-1">
-        <a mat-raised-button color="primary" routerLink="/routes">Create Route</a>
       </div>
     </div>
   </div>
@@ -15,10 +12,16 @@
 
   <div class="row">
     <div class="col-6">
-      <div class="card card-space outer-border" *ngFor="let route of routesList;">
+      <mat-card class="card-space" *ngFor="let route of routesList;">
+        <div class="row">
+          <div class="col-12 text-right">
+            <mat-checkbox (click)="onRouteSelected(route)" color="primary">
+            </mat-checkbox>
+          </div>
+        </div>
         <div class="row" (click)="updateRoute(route.stops, route.direction)">
           <div class="row">
-            <div class="col-3">
+            <div class="col-4">
               <h4>Route ID</h4>
             </div>
             <div class="col-3">
@@ -27,12 +30,12 @@
             <div class="col-3">
               <h4>Direction </h4>
             </div>
-            <div class="col-3">
+            <div class="col-2">
               <h4>Status</h4>
             </div>
           </div>
           <div class="row">
-            <div class="col-3">
+            <div class="col-4">
               <p>{{ route.routeId }}</p>
             </div>
             <div class="col-3">
@@ -41,30 +44,17 @@
             <div class="col-3">
               <p>{{ route.direction }} </p>
             </div>
-            <div class="col-3">
+            <div class="col-2">
               <p>{{ route.status }} </p>
             </div>
           </div>
           <div class="row">
             <div class="col-6" *ngFor="let stop of route.stops; let i = index">
-              <!-- <ng-container *ngFor="let stop of route.stops"> -->
               <p> {{ i + 1 }} : {{ 'Stop Id: ' + stop.stopId + ', ' + 'Stop Name: ' + stop.name }} </p>
-              <!-- </ng-container> -->
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-12 text-right">
-            <a (click)="deactivateRoute(route._id)">Deactivate</a>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12 text-right">
-            <mat-checkbox (click)="onRouteSelected(route)" color="primary">
-            </mat-checkbox>
-          </div>
-        </div>
-      </div>
+      </mat-card>
     </div>
     <div class="col-6">
       <div id="map"></div>

@@ -9,13 +9,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { ToastNotificationService } from '../shared/notification/notification.service';
-
-
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
-  declarations: [
-    RoutesComponent
-  ],
+  declarations: [RoutesComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -24,8 +21,9 @@ import { ToastNotificationService } from '../shared/notification/notification.se
     MatOptionModule,
     MatInputModule,
     MatSelectModule,
-    MatButtonModule
+    MatButtonModule,
+    MatCardModule,
   ],
-  providers: [ToastNotificationService]
+  providers: [ToastNotificationService],
 })
-export class RoutesModule { }
+export class RoutesModule {}
