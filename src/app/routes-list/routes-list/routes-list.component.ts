@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { RouteItem, RouteStop } from 'src/app/shared/constants/interface-constants';
+import {
+  RouteItem,
+  RouteStop,
+} from 'src/app/shared/constants/interface-constants';
 import { ToastNotificationService } from 'src/app/shared/notification/notification.service';
 import { RouteService } from 'src/app/shared/services/routes/route.service';
 
@@ -7,30 +10,31 @@ declare var google: any;
 @Component({
   selector: 'app-routes-list',
   templateUrl: './routes-list.component.html',
-  styleUrls: ['./routes-list.component.scss']
+  styleUrls: ['./routes-list.component.scss'],
 })
 export class RoutesListComponent implements OnInit {
-
-  
   routesList: RouteItem[];
-  
+
   map: any;
-  
+
   markers = [];
-  
+
   selectedRouteIds = [];
-  
+
   readonly bounds = new google.maps.LatLngBounds();
-  
+
   readonly polylinePath = new google.maps.Polyline({
     path: [],
     geodesic: false,
-    strokeColor: "#FF0000",
+    strokeColor: '#FF0000',
     strokeOpacity: 1.0,
     strokeWeight: 2,
   });
 
-  constructor(private routeService: RouteService, private toast: ToastNotificationService) { }
+  constructor(
+    private routeService: RouteService,
+    private toast: ToastNotificationService
+  ) {}
 
   ngOnInit(): void {
     this.getRoutesList();
@@ -41,32 +45,37 @@ export class RoutesListComponent implements OnInit {
   }
 
   private getRoutesList() {
-    this.routeService.getAllRoutes()
-    .subscribe(response => {
-      this.routesList = response.payload;
-      if (this.routesList.length) {
-        this.loadMap();
-        setTimeout(() => {
-          this.addMarker(this.routesList[0].stops, this.routesList[0].direction);
-        }, 2000);
+    this.loadMap();
+    this.routeService.getAllRoutes().subscribe(
+      (response) => {
+        this.routesList = response.payload;
+        if (this.routesList.length) {
+          setTimeout(() => {
+            this.addMarker(
+              this.routesList[0].stops,
+              this.routesList[0].direction
+            );
+          }, 2000);
+        }
+      },
+      (err) => {
+        this.toast.showError('Error fetching data. Please Later.', 'Error');
       }
-    }, err => {
-      this.toast.showError('Error fetching data. Please Later.', 'Error');
-    })
+    );
   }
 
   updateRoute(locations?: [RouteStop], direction?: string) {
     this.resetMap();
-    this.addMarker(locations, direction)
+    this.addMarker(locations, direction);
   }
 
   resetMap() {
     // Remove all markers to update the routes
-    if (this.markers.length){
-      this.markers.forEach(marker => {
+    if (this.markers.length) {
+      this.markers.forEach((marker) => {
         marker.setMap(null);
       });
-  
+
       this.markers = [];
     }
 
@@ -74,10 +83,10 @@ export class RoutesListComponent implements OnInit {
   }
 
   private loadMap() {
-    navigator.geolocation.getCurrentPosition(currentPosition => {
-      const currentLocation = { 
+    navigator.geolocation.getCurrentPosition((currentPosition) => {
+      const currentLocation = {
         lat: currentPosition.coords.latitude,
-        lng: currentPosition.coords.longitude
+        lng: currentPosition.coords.longitude,
       };
       const mapElement = document.getElementById('map');
       this.map = new google.maps.Map(mapElement as HTMLElement, {
@@ -102,7 +111,7 @@ export class RoutesListComponent implements OnInit {
 
   // Adds a marker to the map.
   addMarker(locations: [RouteStop], direction: string) {
-    locations.forEach(location => {
+    locations.forEach((location) => {
       // Add the marker at the clicked location, and add the next-available label
       // from the array of alphabetical characters.
       const marker = new google.maps.Marker({
@@ -113,7 +122,6 @@ export class RoutesListComponent implements OnInit {
         map: this.map,
       });
 
-      
       // Store the marker so that, it is helpful to remove later.
       this.markers.push(marker);
       this.setMarkerInfoWindow(marker, location);
@@ -122,15 +130,22 @@ export class RoutesListComponent implements OnInit {
       this.map.fitBounds(this.bounds);
       this.drawPolyline(locations, direction);
     });
-    
   }
 
   private setMarkerInfoWindow(marker, location) {
     marker.addListener('click', (event) => {
       const stopForm = location;
-      var content = 'Stop Name: ' + location.name + '<br />Stop Id: ' + location.stopId + '<br />Latitude: ' + location.lat + '<br />Longitude: ' + location.lng;
+      var content =
+        'Stop Name: ' +
+        location.name +
+        '<br />Stop Id: ' +
+        location.stopId +
+        '<br />Latitude: ' +
+        location.lat +
+        '<br />Longitude: ' +
+        location.lng;
       var infoWindow = new google.maps.InfoWindow({
-          content: content
+        content: content,
       });
       infoWindow.open(this.map, marker);
     });
@@ -138,7 +153,7 @@ export class RoutesListComponent implements OnInit {
 
   setPolylineColor(direction) {
     this.polylinePath.setOptions({
-      strokeColor: direction === 'UP' ? 'blue' : 'red'
+      strokeColor: direction === 'UP' ? 'blue' : 'red',
     });
   }
 
@@ -152,12 +167,14 @@ export class RoutesListComponent implements OnInit {
   }
 
   deleteSelectedRoutes() {
-    this.routeService.deleteSelectedRoutes(this.selectedRouteIds)
-    .subscribe(response => {
-      this.toast.showSuccess(response.message, 'Success');
-      this.getRoutesList();
-    }, err => {
-      this.toast.showError(err.error.message, 'Error');
-    });
+    this.routeService.deleteSelectedRoutes(this.selectedRouteIds).subscribe(
+      (response) => {
+        this.toast.showSuccess(response.message, 'Success');
+        this.getRoutesList();
+      },
+      (err) => {
+        this.toast.showError(err.error.message, 'Error');
+      }
+    );
   }
 }

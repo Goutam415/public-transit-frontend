@@ -1,1 +1,1 @@
-export const HTTP_CONSTANT = 'http://localhost:3000/';
+export const HTTP_CONSTANT = 'https://34.68.229.23/map-server/';

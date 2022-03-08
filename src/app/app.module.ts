@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { TOAST_DEFAULT_TIMEOUT } from './shared/constants/shared.constants';
 import { MatButtonModule } from '@angular/material/button';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,7 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
     }),
     MatButtonModule,
   ],
-  providers: [],
+  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
