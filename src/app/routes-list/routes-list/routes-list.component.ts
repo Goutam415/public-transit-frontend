@@ -31,6 +31,8 @@ export class RoutesListComponent implements OnInit {
     strokeWeight: 2,
   });
 
+  selectedCardIndex = 0;
+
   constructor(
     private routeService: RouteService,
     private toast: ToastNotificationService

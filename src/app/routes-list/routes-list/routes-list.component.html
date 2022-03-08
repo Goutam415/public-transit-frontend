@@ -12,7 +12,8 @@
 
   <div class="row">
     <div class="col-6">
-      <mat-card class="card-space" *ngFor="let route of routesList;">
+      <mat-card class="card-space" (click)="selectedCardIndex = i" [ngClass]="{'highlight': selectedCardIndex === i}"
+        *ngFor="let route of routesList;let i = index;">
         <div class="row">
           <div class="col-12 text-right">
             <mat-checkbox (click)="onRouteSelected(route)" color="primary">
