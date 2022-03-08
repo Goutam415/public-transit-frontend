@@ -16,6 +16,7 @@
         *ngFor="let route of routesList;let i = index;">
         <div class="row">
           <div class="col-12 text-right">
+            <button mat-flat-button color="link" (click)=" viewRouteDetails(route._id)">View</button>
             <mat-checkbox (click)="onRouteSelected(route)" color="primary">
             </mat-checkbox>
           </div>

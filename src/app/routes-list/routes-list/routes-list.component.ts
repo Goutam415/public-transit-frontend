@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   RouteItem,
   RouteStop,
@@ -35,7 +36,9 @@ export class RoutesListComponent implements OnInit {
 
   constructor(
     private routeService: RouteService,
-    private toast: ToastNotificationService
+    private toast: ToastNotificationService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -71,7 +74,7 @@ export class RoutesListComponent implements OnInit {
     this.addMarker(locations, direction);
   }
 
-  resetMap() {
+  private resetMap() {
     // Remove all markers to update the routes
     if (this.markers.length) {
       this.markers.forEach((marker) => {
@@ -112,7 +115,7 @@ export class RoutesListComponent implements OnInit {
   }
 
   // Adds a marker to the map.
-  addMarker(locations: [RouteStop], direction: string) {
+  private addMarker(locations: [RouteStop], direction: string) {
     locations.forEach((location) => {
       // Add the marker at the clicked location, and add the next-available label
       // from the array of alphabetical characters.
@@ -153,7 +156,7 @@ export class RoutesListComponent implements OnInit {
     });
   }
 
-  setPolylineColor(direction) {
+  private setPolylineColor(direction) {
     this.polylinePath.setOptions({
       strokeColor: direction === 'UP' ? 'blue' : 'red',
     });
@@ -178,5 +181,11 @@ export class RoutesListComponent implements OnInit {
         this.toast.showError(err.error.message, 'Error');
       }
     );
+  }
+
+  viewRouteDetails(routeId) {
+    this.router.navigate(['../routes/' + routeId], {
+      relativeTo: this.activatedRoute,
+    });
   }
 }
